@@ -1,0 +1,2 @@
+# Store text files with LF so scripts and files behave the same on Windows and on Linux CI runners.
+* text=auto eol=lf

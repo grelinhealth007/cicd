@@ -1,0 +1,8 @@
+node_modules/
+dist/
+coverage/
+junit.xml
+*.log
+.env
+.env.*
+!.env.example
