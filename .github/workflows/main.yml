@@ -1,0 +1,21 @@
+name: Main
+
+on:
+  push:
+    branches: [main] # only pushes to main, never feature branches
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - run: echo "event=${{ github.event_name }} ref=${{ github.ref }} sha=${{ github.sha }}"
+      - uses: actions/checkout@v7
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "1.4.2"
+      - run: bun install --frozen-lockfile
+      - run: bun test
+      - run: bun run build # makes dist/server.js
+      - name: Deploy (pretend)
+        run: echo "Would deploy commit ${GITHUB_SHA::7} now"

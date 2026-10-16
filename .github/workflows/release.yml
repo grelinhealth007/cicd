@@ -1,0 +1,25 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"] # v0.1.0, v2.0.0, v2.0.0-rc.1 …
+
+permissions:
+  contents: write # needed to create a GitHub Release
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - run: echo "event=${{ github.event_name }} ref=${{ github.ref }} tag=${{ github.ref_name }}"
+      - uses: actions/checkout@v7
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "1.4.2"
+      - run: bun install --frozen-lockfile
+      - run: bun test
+      - name: Create the GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" --generate-notes --verify-tag

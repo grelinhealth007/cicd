@@ -1,0 +1,32 @@
+name: Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: "Where to deploy"
+        type: choice
+        options: [staging, production]
+        default: staging
+      version:
+        description: "Version or tag to deploy, e.g. v0.1.0"
+        type: string
+        required: true
+      dry_run:
+        description: "Only print, don't deploy"
+        type: boolean
+        default: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Deploy (pretend)
+        env: # inputs go through env: (safe, see note 07)
+          TARGET: ${{ inputs.target }}
+          VERSION: ${{ inputs.version }}
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          echo "event=${{ github.event_name }}"
+          echo "Deploying $VERSION to $TARGET (dry run: $DRY_RUN)"
