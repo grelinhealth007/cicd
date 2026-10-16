@@ -1,0 +1,19 @@
+name: Nightly
+
+on:
+  schedule:
+    - cron: "30 20 * * *" # 20:30 UTC = 02:00 India time, every day
+  workflow_dispatch: # a button too, so you can test it without waiting
+
+jobs:
+  nightly:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - run: echo "event=${{ github.event_name }}"
+      - uses: actions/checkout@v7
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "1.4.2"
+      - run: bun install --frozen-lockfile
+      - run: bun test
